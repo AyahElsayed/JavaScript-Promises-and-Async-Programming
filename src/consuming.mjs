@@ -35,8 +35,25 @@ export function chainCatch() {
             setText(`City: ${data.city}`);
         })
         .catch(setText);
-        // in chain use one catch to catch all errors
+    // in chain use one catch to catch all errors
 }
 
 export function final() {
+    showWaiting();
+    axios.get("http://localhost:3000/orders/1")
+        .then(({ data }) => {
+            return axios.get(`http://localhost:3000/addresses/${data.shippingAddress}`);
+        })
+        .then(({ data }) => {
+            setText(`City: ${data.city}`);
+        })
+        .catch(setText)
+        .finally(() => {
+            setTimeout(() => {
+                hideWaiting();
+            }, 1500);
+            appendText(' -- COMPLETELY DONE');
+            // finally function waited until all our code done 
+            // after then or catch done
+        });
 }
