@@ -26,6 +26,16 @@ export function chain() {
 }
 
 export function chainCatch() {
+    axios.get("http://localhost:3000/orders/1")
+        .then(({ data }) => {
+            axios.get(`http://localhost:3000/addresses/${data.shippingAddress}`);
+            throw new Error('Fake Error');
+        })
+        .then(({ data }) => {
+            setText(`City: ${data.city}`);
+        })
+        .catch(setText);
+        // in chain use one catch to catch all errors
 }
 
 export function final() {
