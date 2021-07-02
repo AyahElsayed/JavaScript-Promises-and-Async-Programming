@@ -15,6 +15,14 @@ export function getCatch() {
 }
 
 export function chain() {
+    axios.get("http://localhost:3000/orders/1")
+        .then(({ data }) => {
+            return axios.get(`http://localhost:3000/addresses/${data.shippingAddress}`);
+            // if i remove return, will get error
+        })
+        .then(({ data }) => {
+            setText(`City: ${data.city}`);
+        })
 }
 
 export function chainCatch() {
