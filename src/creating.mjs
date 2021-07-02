@@ -9,7 +9,7 @@ import setText, { appendText } from "./results.mjs";
 export function timeout() {
     let wait = new Promise(resolve => {
         setTimeout(() => {
-            resolve("Timeout!"); // update one time
+            resolve("Timeout!"); // setTimeout fires one time
         }, 1500);
     });
 
@@ -17,9 +17,30 @@ export function timeout() {
 }
 
 export function interval() {
+    let counter = 0;
+    let wait = new Promise(resolve => {
+        setInterval(() => {
+            console.log("INTERVAL");   // setInterval fires multiple times
+            resolve(`Timeout! ${++counter}`);
+        }, 1500);
+    });
+
+    wait.then(setText).finally(() => appendText(` -- Done ${counter}`));
 }
 
 export function clearIntervalChain() {
+    let counter = 0;
+    let interval;
+    let wait = new Promise(resolve => {
+        interval = setInterval(() => {
+            console.log("INTERVAL");
+            resolve(`Timeout! ${++counter}`);
+        }, 1500);
+    });
+
+    wait.then(setText).finally(() => {
+        clearInterval(interval);
+    });
 }
 
 export function xhr() {
