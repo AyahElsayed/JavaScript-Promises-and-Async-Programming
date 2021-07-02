@@ -63,7 +63,24 @@ export function xhr() {
     request.then(setText).catch(setText);
 }
 
+// all function will wait until all fulfilled or one rejects
 export function allPromises() {
+    let categories = axios.get("http://localhost:3000/itemCategories");
+    let statuses = axios.get("http://localhost:3000/orderStatuses");
+    let userTypes = axios.get("http://localhost:3000/userTypes");
+    let address = axios.get("http://localhost:3000/addressTypes");
+
+    Promise.all([categories, statuses, userTypes, address])
+        .then(([cat, stat, type, address]) => {
+            setText("");
+            appendText(JSON.stringify(cat.data));
+            appendText(JSON.stringify(stat.data));
+            appendText(JSON.stringify(type.data));
+            appendText(JSON.stringify(address.data));
+        })
+        .catch(reasons => {
+            setText(reasons);
+        });
 }
 
 export function allSettled() {
