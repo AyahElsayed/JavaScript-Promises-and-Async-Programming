@@ -83,7 +83,44 @@ export function allPromises() {
         });
 }
 
+// if one or even two promises is fail, that's okay so long as you get the rest of the data
+
+// allSettled returned data:
+// resolved =>
+// {
+//    status: "fulfilled",
+//    value: {}
+// }
+
+// rejected =>
+// {
+//    status: "rejected",
+//    reason: {}
+// }
+
+// dont need catch function, but good practice to include
+
 export function allSettled() {
+    let categories = axios.get("http://localhost:3000/itemCategories");
+    let statuses = axios.get("http://localhost:3000/orderStatuses");
+    let userTypes = axios.get("http://localhost:3000/userTypes");
+    let address = axios.get("http://localhost:3000/addressTypes");
+
+    Promise.allSettled([categories, statuses, userTypes, address])
+        .then(values => {
+            let results = values.map(v => {
+                if (v.status === "fulfilled") {
+                    return `FULFILLED: ${JSON.stringify(v.value.data[0])}`;
+                }
+
+                return `REJECTED: ${v.reason.message}`;
+            });
+
+            setText(results);
+        })
+        .catch(reasons => {
+            setText(reasons);
+        });
 }
 
 export function race() {
